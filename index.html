@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Escape the Haunted Library — ESL Escape Room</title>
+  <style>
+    :root{ --bg:#0b1221; --card:#0f1a2b; --accent:#f6a827; --text:#ecf0f8;}
+    body{font-family:Inter,system-ui,Segoe UI,Arial; margin:0; background:linear-gradient(180deg,#031021 0%, #071224 60%); color:var(--text);}
+    .wrap{max-width:880px;margin:32px auto;padding:28px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); box-shadow:0 6px 30px rgba(0,0,0,0.6);}
+    h1{margin:0 0 8px;font-size:26px;color:var(--accent)}
+    p.lead{margin:0 0 18px; opacity:0.9}
+    .scene{padding:18px;border-radius:10px;background:linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.05)); margin-bottom:16px}
+    label{display:block;margin:8px 0 6px;font-weight:600}
+    input[type="text"], textarea{width:100%; padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02); color:var(--text)}
+    button.btn{display:inline-block;padding:10px 14px;border-radius:8px;border:none;background:var(--accent);color:#081018;font-weight:700;cursor:pointer;margin-top:8px}
+    .hint{font-size:13px; opacity:0.85;}
+    .hidden{display:none}
+    .success{background:linear-gradient(90deg,#0b6623,#2ecc71); padding:12px;border-radius:8px;color:#04120a;font-weight:700}
+    .puzzle-title{font-weight:700;margin-bottom:8px}
+    .controls{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .small{font-size:13px; opacity:0.9}
+    .timer{font-weight:700;background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:8px}
+    .final{padding:14px;border-radius:10px;background:linear-gradient(90deg,#0a1220,#071b2b); text-align:center}
+    .audio-btn{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06); background:transparent;color:var(--text); cursor:pointer}
+    footer{margin-top:14px;font-size:13px; opacity:0.7}
+  </style>
+</head>
+<body>
+  <div class="wrap" role="application" aria-labelledby="title">
+    <h1 id="title">Escape the Haunted Library</h1>
+    <p class="lead">You and your team are trapped in the library. Solve the English puzzles to find the final key and escape. Type answers exactly (lowercase is accepted).</p>
+
+    <div class="scene" id="scene-1">
+      <div class="puzzle-title">🔎 Puzzle 1 — Vocabulary Lock</div>
+      <p>Look at the pictures below and read the riddle. Which object fits?</p>
+      <p class="hint">"I help you draw straight lines. Who am I?"</p>
+      <label for="ans1">Type the object name:</label>
+      <input id="ans1" placeholder="e.g. ruler" aria-label="Answer to puzzle 1" />
+      <div class="controls">
+        <button class="btn" onclick="check1()">Unlock</button>
+        <div class="small timer">Stage 1</div>
+      </div>
+      <div id="ok1" class="hidden success" role="status">Correct — the ruler reveals a secret code: 4</div>
+    </div>
+
+    <div class="scene" id="scene-2">
+      <div class="puzzle-title">📖 Puzzle 2 — Reading Comprehension</div>
+      <p><strong>Text:</strong> One stormy night, Anna entered the library. Suddenly, the lights went out. She looked for a candle to read the old map hidden under the dusty table.</p>
+      <label for="ans2">Question: What did Anna look for?</label>
+      <input id="ans2" aria-label="Answer to puzzle 2" />
+      <div class="controls">
+        <button class="btn" onclick="check2()">Submit</button>
+        <div class="small">Stage 2</div>
+      </div>
+      <div id="ok2" class="hidden success">Good — the candle shows the number: 1</div>
+    </div>
+
+    <div class="scene" id="scene-3">
+      <div class="puzzle-title">✍️ Puzzle 3 — Grammar Code</div>
+      <p>Rearrange the words to make a correct sentence.</p>
+      <p class="hint"><em>running / is / the / dog</em></p>
+      <label for="ans3">Type the correct sentence:</label>
+      <input id="ans3" aria-label="Answer to puzzle 3" />
+      <div class="controls">
+        <button class="btn" onclick="check3()">Check</button>
+        <div class="small">Stage 3</div>
+      </div>
+      <div id="ok3" class="hidden success">Nice! The sentence reveals the number: 7</div>
+    </div>
+
+    <div class="scene" id="scene-4">
+      <div class="puzzle-title">🎧 Puzzle 4 — Listening Task</div>
+      <p>Press play and listen carefully. Then type the answer.</p>
+      <audio id="audio" preload="auto">
+        <!-- Replace src with your own recorded audio URL or keep the sample below -->
+        <source src="https://cdn.jsdelivr.net/gh/jdorfman/awesome-models@master/audio-example.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+      <div style="margin-top:8px;">
+        <button class="audio-btn" onclick="document.getElementById('audio').play()">Play audio</button>
+      </div>
+      <label for="ans4" style="margin-top:8px;display:block">Question: Where is the key?</label>
+      <input id="ans4" aria-label="Answer to puzzle 4" placeholder="e.g. red chair" />
+      <div class="controls">
+        <button class="btn" onclick="check4()">Submit</button>
+        <div class="small">Stage 4</div>
+      </div>
+      <div id="ok4" class="hidden success">Audio solved! This gives the number: 9</div>
+    </div>
+
+    <div class="scene" id="final-scene">
+      <div class="puzzle-title">🔐 Final Lock — Enter 4-digit Code</div>
+      <p>Use the numbers from each puzzle in order to open the final lock. (Stage1 + Stage2 + Stage3 + Stage4)</p>
+      <label for="final">Enter code:</label>
+      <input id="final" maxlength="4" aria-label="Final code input" />
+      <div class="controls">
+        <button class="btn" onclick="checkFinal()">Open Lock</button>
+        <div class="small">Final</div>
+      </div>
+      <div id="final-msg" class="hidden final" role="status"></div>
+    </div>
+
+    <footer>Teacher notes: You can replace audio, change riddles, or edit correct answers in the script below. For low-bandwidth, remove audio or large images.</footer>
+  </div>
+
+  <script>
+    /* ======= ANSWERS / GAME LOGIC - EDIT HERE IF YOU WANT TO CHANGE PUZZLES ======= */
+    const answers = {
+      p1: ["ruler"],          // puzzle 1 acceptable answers
+      p2: ["candle"],
+      p3: ["the dog is running.", "the dog is running", "the dog is running!"], // allow punctuation variations
+      p4: ["red chair", "under the red chair", "under red chair"]
+    };
+
+    // numbers revealed by each puzzle (teacher can change)
+    const puzzleNumbers = { p1: "4", p2: "1", p3: "7", p4: "9" };
+
+    // helper to normalize answers
+    function norm(s){ return (s || "").trim().toLowerCase(); }
+
+    function check1(){
+      const v = norm(document.getElementById('ans1').value);
+      if(answers.p1.includes(v)){
+        document.getElementById('ok1').classList.remove('hidden');
+        document.getElementById('ans1').disabled = true;
+      } else {
+        alert("Try again — read the riddle and look at the objects.");
+      }
+    }
+
+    function check2(){
+      const v = norm(document.getElementById('ans2').value);
+      if(answers.p2.includes(v)){
+        document.getElementById('ok2').classList.remove('hidden');
+        document.getElementById('ans2').disabled = true;
+      } else {
+        alert("Not quite — look back at the short text.");
+      }
+    }
+
+    function check3(){
+      const v = norm(document.getElementById('ans3').value);
+      // normalize spaces and punctuation for comparison
+      const cmp = v.replace(/[^\w\s]/g, "").replace(/\s+/g," ").trim();
+      const allowed = answers.p3.map(x => x.replace(/[^\w\s]/g, "").replace(/\s+/g," ").trim());
+      if(allowed.includes(cmp)){
+        document.getElementById('ok3').classList.remove('hidden');
+        document.getElementById('ans3').disabled = true;
+      } else {
+        alert("Sentence not correct yet. Try rearranging the words into a proper English sentence.");
+      }
+    }
+
+    function check4(){
+      const v = norm(document.getElementById('ans4').value);
+      // allow partial matches
+      const ok = answers.p4.some(a => v.includes(a));
+      if(ok){
+        document.getElementById('ok4').classList.remove('hidden');
+        document.getElementById('ans4').disabled = true;
+      } else {
+        alert("Listen again carefully — the speaker says where the key is.");
+      }
+    }
+
+    function checkFinal(){
+      // build expected code from puzzleNumbers
+      const expected = puzzleNumbers.p1 + puzzleNumbers.p2 + puzzleNumbers.p3 + puzzleNumbers.p4;
+      const raw = document.getElementById('final').value.trim();
+      if(raw === expected){
+        document.getElementById('final-msg').classList.remove('hidden');
+        document.getElementById('final-msg').innerHTML = "<h2>🎉 You escaped the Haunted Library!</h2><p>Well done — pupils showed reading, listening and grammar skills.</p>";
+      } else {
+        document.getElementById('final-msg').classList.remove('hidden');
+        document.getElementById('final-msg').innerHTML = "<p class='small'>Wrong code. Check the numbers you found in each stage.</p>";
+        setTimeout(()=>{ document.getElementById('final-msg').classList.add('hidden') }, 3500);
+      }
+    }
+  </script>
+</body>
+</html>
